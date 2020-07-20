@@ -19,7 +19,7 @@ const conn = mysql.createConnection({
 });
 
 app.get('/', (req, res, next) => {
-    res.sendFile(__dirname + '/socket.html');
+    res.sendFile(__dirname + '/index.html');
 })
 
 
