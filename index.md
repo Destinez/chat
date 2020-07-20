@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hello world</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+
+    
+    // socket.on('newclientconnnect', (message) => {
+    //     document.querySelector('.new-user').innerHTML = '';
+
+    //     document.querySelector('#welcome').innerHTML = message.description;
+    // });
+
+    var sendName = (event) => {   
+        event.preventDefault(); 
+
+        document.querySelector('.my-msg').innerHTML = '<input placeholder="Type ur msg" id="msg"> <input type="button" value="Send" id="submit-msg" onclick="sendMsg(event)">';
+        user = document.querySelector('#username').value;
+
+        document.querySelector('.new-user').innerHTML = '';
+        socket.emit('user', user);
+
+        document.querySelector('#welcome').innerHTML = "";
+        document.querySelector('#welcome').innerHTML = user;
+    }
+
+    socket.on('userSet', (data) => {
+        user = data.username;
+        // document.querySelector('#welcome').innerHTML = "";
+        // document.querySelector('#welcome').innerHTML = user;
+        document.querySelector('.all-msg').innerHTML += "<i> <small>" +user + ": just joined the chat </small><i><br>";
+
+        })
+
+
+    var sendMsg = (event) => {
+        event.preventDefault();
+        
+        var msg = document.querySelector('#msg').value;
+        var user = document.querySelector('#welcome').innerHTML;
+   
+        socket.emit("newMsg", {msg, user});
+
+
+    }
+
+    socket.on('appendMsg', (data) => {
+        var msg = data.message;
+        var user = data.userId;
+        
+        document.querySelector('.all-msg').innerHTML += user +": " +msg +"<br>";
+    })
+
+;
+    
+
+   
+
+    socket.emit('client', 'This is from the client js');
+</script>
+
+<body>  
+    <div class="body">
+        <div class="new">
+            <label id="welcome">Welcome, Enter Your Name</label>
+            <div class="new-user">
+                <input type="text" id="username"> <input type="button" id="submit-msg" value="Enter" onclick="sendName(event)">
+            </div>
+        </div>
+
+        <div class="my-msg">
+
+        </div>
+
+        <div class="all-msg">
+        
+        </div>
+
+
+
+    </div>
+
+
+</body>
+
+</html>
